@@ -1,0 +1,106 @@
+server:
+  port: ${BACKEND_PORT:8080}
+  tomcat:
+    # Micrometer TomcatMetrics(tomcat_threads_* 指标)依赖 JMX MBean 注册
+    mbeanregistry:
+      enabled: true
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: steelguard-admin-api
+  profiles:
+    active: dev
+
+  # MySQL
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:4406}/${MYSQL_DATABASE:steelguard}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:steelguard123}
+
+  # Redis
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:steelguard123}
+      timeout: 5s
+
+  # Servlet 文件上传
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 200MB
+
+# MyBatis-Plus
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# JWT
+steelguard:
+  jwt:
+    secret: ${JWT_SECRET:steelguard-jwt-secret-change-me-in-production-2026}
+    expire: ${JWT_EXPIRE:86400000}
+  # AI 服务地址(Python FastAPI)
+  ai-service:
+    base-url: ${AI_SERVICE_URL:http://localhost:8001}
+
+# MinIO
+minio:
+  # 内部端点: 服务端实际上传/下载 I/O
+  endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+  # 对外端点: 仅用于生成浏览器访问的预签名 URL(容器内 I/O 走 minio:9000,
+  # 浏览器走宿主可达地址); 不配置时与内部端点一致(宿主开发环境零影响)
+  public-endpoint: ${MINIO_PUBLIC_ENDPOINT:${MINIO_ENDPOINT:http://localhost:9000}}
+  access-key: ${MINIO_ACCESS_KEY:steelguard}
+  secret-key: ${MINIO_SECRET_KEY:steelguard123}
+  bucket: defect-images
+  # 数据集专用 bucket(阶段1: 原图 + 增强图)
+  datasets-bucket: ${MINIO_DATASETS_BUCKET:datasets}
+
+# Knife4j / Springdoc
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+knife4j:
+  # 关闭增强: knife4j 4.5.0 增强 Customizer 与 springdoc 2.8.x 不兼容; doc.html 页面正常可用
+  enable: false
+  setting:
+    language: zh_cn
+
+# 阶段5.2: Actuator/Prometheus 监控
+# 注意 context-path=/api, 完整抓取路径为 /api/actuator/prometheus
+management:
+  endpoints:
+    web:
+      exposure:
+        # 最小暴露面: 不放 env/beans/threaddump/heapdump
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: never
+  metrics:
+    tags:
+      application: steelguard-admin-api
+    distribution:
+      # Prometheus 客户端侧发布直方图桶(Micrometer 默认 1ms~10s 指数桶),
+      # 支持 histogram_quantile 算 P95/P99; 不要配无单位小数 SLO —— 会被
+      # Micrometer 当百分位并报 Found 0.0 致所有请求 500
+      percentiles-histogram:
+        http.server.requests: true
+
+logging:
+  level:
+    com.steelguard: debug
+    org.springframework.security: info
