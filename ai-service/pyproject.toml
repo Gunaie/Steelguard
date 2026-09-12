@@ -1,0 +1,57 @@
+# SteelGuard AI 服务 (Python FastAPI)
+# 阶段0: 健康检查 + ping; 阶段3: YOLO 推理(ONNX) + Qwen-VL 云端对决
+
+[project]
+name = "steelguard-ai-service"
+version = "0.3.0"
+description = "SteelGuard AI 推理服务: YOLO 缺陷检测 + Qwen-VL 零样本"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.7.0",
+    "pydantic-settings>=2.3.0",
+    "httpx>=0.27.0",
+    "python-multipart>=0.0.12",
+    "pillow>=12.3.0",
+    "minio>=7.2.20",
+    "pymysql>=1.2.0",
+    "albumentations>=2.0.8",
+    # 阶段3: YOLO 推理(torch 需安装与驱动匹配的 CUDA 版, 见下方说明)
+    "ultralytics>=8.3.0",
+    "onnxruntime>=1.20.0",
+    # 里程碑3.2: 阿里百炼 Qwen-VL(OpenAI 兼容 SDK)
+    "openai>=1.50.0",
+    # 阶段4: Milvus 向量库客户端(缺陷裁剪图相似检索)
+    "pymilvus>=2.4.9,<2.5",
+    # Python3.14 兼容钉版: pymilvus2.4 依赖 pkg_resources(setuptools>=81 已移除),
+    # environs9 不兼容 marshmallow4(__version_info__ 被删)
+    "setuptools<81",
+    "marshmallow<4",
+    # 阶段4: LLM 结构化报告 JSON Schema 校验
+    "jsonschema>=4.23.0",
+    # 阶段5.2: Prometheus 指标(/metrics 自动 HTTP RED + 自定义 YOLO 业务指标)
+    "prometheus-fastapi-instrumentator>=7.0.0",
+    # "torch>=2.3.0",  # 不要直接从 PyPI 装! 本机 RTX4060 + 驱动560(CUDA12.6) 用:
+    # uv pip install torch torchvision \
+    #   --index-url https://mirrors.sjtug.sjtu.edu.cn/pytorch-wheels/cu126/ \
+    #   --extra-index-url https://pypi.tuna.tsinghua.edu.cn/simple
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.5.0",
+]
+
+[[tool.uv.index]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
