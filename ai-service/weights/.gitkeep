@@ -1,0 +1,5 @@
+# 模型权重不入库（best.pt 18MB / best.onnx 36MB）。
+# 获取方式见根 README「数据集与训练复现」与 docs/项目交接文档.md：
+#   - MinIO: models/neu-det/yolo11s/best.pt
+#   - 或自训：ai-service/training/train_neudet.sh
+# 放置后本目录应包含 best.pt（推理/构建镜像必需）与 best.onnx（CPU 一致性校验用）。

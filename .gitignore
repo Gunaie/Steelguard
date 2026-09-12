@@ -1,0 +1,70 @@
+# ========== IDE ==========
+.idea/
+.vscode/
+*.iml
+
+# ========== Java ==========
+target/
+*.class
+*.jar
+*.war
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+
+# ========== Python ==========
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# ========== Node ==========
+node_modules/
+dist/
+dist-ssr/
+*.local
+*.tsbuildinfo
+
+# ========== 数据/模型(不入库) ==========
+data/
+datasets/
+*.pt
+*.pth
+*.onnx
+*.weights
+*.h5
+*.safetensors
+models/
+runs/
+.ultralytics/
+# ultralytics 在 CONFIG_DIR 不可写时回退到工作目录生成的配置目录
+/ai-service/Ultralytics/
+# ResNet50 ImageNet 权重缓存(阶段4 溯源 embedding)
+.torch/
+/ai-service/.torch/
+
+# ========== 环境/密钥 ==========
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ========== 日志 ==========
+*.log
+logs/
+
+# ========== OS ==========
+.DS_Store
+Thumbs.db
+
+# ========== 本项目本地产物 ==========
+# 训练产物本地临时副本(归档在 MinIO/网盘, 不入库)
+/111/
+# AI 代理工作区(计划文档等, 非项目代码)
+/.trae/
+# 第三方参考 PDF(知识图谱, 非项目交付物)
+/*.pdf

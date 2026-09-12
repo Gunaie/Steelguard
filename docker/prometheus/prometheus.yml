@@ -1,0 +1,29 @@
+# SteelGuard Prometheus 抓取配置(阶段5.2)
+# 容器网络内服务发现: ai-service(gpu/cpu profile 互斥别名) / backend
+global:
+  scrape_interval: 5s      # 压测窗口短, 5s 粒度保证曲线平滑
+  evaluation_interval: 15s
+  external_labels:
+    project: steelguard
+
+scrape_configs:
+  # Prometheus 自监控
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # Python AI 服务: 自动 HTTP RED + yolo_* 业务指标
+  - job_name: ai-service
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["ai-service:8001"]
+        labels:
+          service: fastapi-yolo
+
+  # Java 后端(注意 server.servlet.context-path=/api)
+  - job_name: backend
+    metrics_path: /api/actuator/prometheus
+    static_configs:
+      - targets: ["backend:8080"]
+        labels:
+          service: springboot-admin

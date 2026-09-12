@@ -1,0 +1,28 @@
+# Python 虚拟环境/缓存
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# 本地运行时生成(容器内按 ENV 重建)
+.ultralytics/
+Ultralytics/
+
+# 不入镜像的数据与产物(需要时用 volume 挂入)
+data/
+reports/
+tests/
+training/
+scripts/
+*.zip
+
+# 密钥/环境
+.env
+.env.*
+
+# 杂项
+.git/
+.gitignore
+*.md
