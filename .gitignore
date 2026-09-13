@@ -3,6 +3,10 @@
 .vscode/
 *.iml
 
+# 本地面试备战材料（不进公开仓库，含目录与打包文件）
+interview-prep/
+interview-prep*.zip
+
 # ========== Java ==========
 target/
 *.class
