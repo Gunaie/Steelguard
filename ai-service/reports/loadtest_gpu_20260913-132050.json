@@ -1,0 +1,70 @@
+{
+  "meta": {
+    "timestamp": "20260913-132050",
+    "target": "http://frontend",
+    "mode": "gpu",
+    "image_count": 200,
+    "warmup": 30,
+    "levels": "10,20,50",
+    "per_level": 500
+  },
+  "levels": [
+    {
+      "concurrency": 10,
+      "total": 500,
+      "success": 500,
+      "errors": 0,
+      "status_codes": {
+        "200": 500
+      },
+      "qps": 58.02,
+      "wall_seconds": 8.62,
+      "p50_ms": 144.8,
+      "p90_ms": 178.4,
+      "p95_ms": 199.5,
+      "p99_ms": 271.9,
+      "max_ms": 337.5,
+      "mean_ms": 151.5,
+      "avg_detections": 2.63,
+      "error_samples": []
+    },
+    {
+      "concurrency": 20,
+      "total": 500,
+      "success": 500,
+      "errors": 0,
+      "status_codes": {
+        "200": 500
+      },
+      "qps": 55.24,
+      "wall_seconds": 9.05,
+      "p50_ms": 321.9,
+      "p90_ms": 406.8,
+      "p95_ms": 446.6,
+      "p99_ms": 504.3,
+      "max_ms": 691.6,
+      "mean_ms": 333.6,
+      "avg_detections": 2.63,
+      "error_samples": []
+    },
+    {
+      "concurrency": 50,
+      "total": 500,
+      "success": 500,
+      "errors": 0,
+      "status_codes": {
+        "200": 500
+      },
+      "qps": 55.05,
+      "wall_seconds": 9.08,
+      "p50_ms": 803.6,
+      "p90_ms": 958.2,
+      "p95_ms": 1119.8,
+      "p99_ms": 1144.6,
+      "max_ms": 1164.1,
+      "mean_ms": 821.9,
+      "avg_detections": 2.63,
+      "error_samples": []
+    }
+  ]
+}
