@@ -6,6 +6,7 @@
 [![dataset](https://img.shields.io/badge/dataset-NEU--DET%201800%20张%206%20类-orange)](#数据集)
 [![mAP](https://img.shields.io/badge/mAP50-0.760-success)](#模型效果)
 [![perf](https://img.shields.io/badge/20%20并发%20P95-446.6ms%20%280%20错误%29-success)](#性能压测)
+[![CI](https://github.com/Gunaie/Steelguard/actions/workflows/ci.yml/badge.svg)](https://github.com/Gunaie/Steelguard/actions/workflows/ci.yml)
 [![demo](https://img.shields.io/badge/docker%20compose%20up%20--profile%20gpu-2496ED?logo=docker&logoColor=white)](#二docker-一键启动gpu--cpu)
 
 ---
@@ -24,6 +25,7 @@
 10. [数据集与训练复现](#十数据集与训练复现)
 11. [测试](#十一测试)
 12. [文档索引](#十二文档索引)
+13. [面试自查](#十三面试自查高频问题与代码证据)
 
 ---
 
@@ -37,13 +39,13 @@
 
 ## 二、核心亮点
 
-1. **全栈自研，不只是调模型**：Java 微服务网关（JWT、异步批次编排、MinIO 双端点预签名）+ Python AI 服务（YOLO/Embedding/VLM/LLM）+ Vue3 可视化，MySQL / Redis / MinIO / Milvus 完整工程化。
+1. **全栈自研，不只是调模型**：Java 微服务网关（JWT + Redis 登出黑名单/登录防爆破、异步批次编排、MinIO 双端点预签名）+ Python AI 服务（YOLO/Embedding/VLM/LLM）+ Vue3 可视化，MySQL / Redis / MinIO / Milvus 完整工程化。
 2. **YOLO vs VLM 百图实测对照**（非纸上谈兵）：YOLO F1=0.677、单图 11.9ms、零现金成本；Qwen-VL-plus 零样本 F1=0.034、均 8.5s、¥0.167/100 张 —— 用数据说明工业产线为何应选专用检测模型。
 3. **LLM 防幻觉三重防线**：事实注入（所有数字由 Java 聚合，禁止 LLM 造数）+ JSON Schema 强校验 + 校验失败带错修复重试，脏报告绝不落库；严重度由程序规则最终定级并留痕。
 4. **Milvus 缺陷溯源**：ResNet50-V2 对检测框裁剪图提 2048 维特征入库（4839 个历史案例），bbox 模式 top1 同类率 **93.3%**；支持类别过滤与排除本批次。
 5. **GPU/CPU 双模式容器化**：一份 Dockerfile 构建 GPU(4.53GB)/CPU(1.05GB) 镜像，`docker compose --profile gpu|cpu up` 一键起；MySQL 空卷自动建表 + admin 种子。
 6. **可观测性达标**：Prometheus 5 秒抓取 Python/Java 双端自定义指标，Grafana 12 面板自动预置；阶梯压测定位到全局串行锁为容量瓶颈并给出扩容方向。
-7. **121 个 Python 测试全绿**，覆盖增强变换、VLM JSON 打捞、报告校验、Milvus 表达式白名单注入防护等真实踩坑点。
+7. **121 个 Python + 36 个 Java 测试全绿**，覆盖增强变换、VLM JSON 打捞、报告校验、Milvus 表达式白名单注入防护、严重度定级边界、JWT 黑名单/登录锁定与批次抽样落库等真实踩坑点；GitHub Actions 三端 CI（mvn test / pytest / vite build）。
 
 ## 三、系统架构
 
@@ -68,7 +70,7 @@ flowchart TB
 
     subgraph infra["基础设施（Docker Compose）"]
         MYSQL[("MySQL 8.0<br/>7 张业务表")]
-        REDIS[("Redis 7")]
+        REDIS[("Redis 7<br/>JWT 登出黑名单/登录失败锁定")]
         MINIO[("MinIO<br/>原图/增强图/裁剪图/模型权重")]
         MILVUS[("Milvus 2.4<br/>4839 缺陷案例向量")]
     end
@@ -82,7 +84,7 @@ flowchart TB
     NG -->|/api → :8080| JAVA
     JAVA -->|HTTP :8001| PY
     JAVA --> MYSQL
-    JAVA --> REDIS
+    JAVA -->|登出黑名单 jti/失败计数| REDIS
     JAVA -->|预签名签发/对象| MINIO
     PY --> YOLO
     PY --> RES
@@ -138,7 +140,7 @@ sequenceDiagram
 | 网关/业务 | Java 17（Maven 多模块）、Spring Boot 3.5、Spring Security + JWT、MyBatis | admin-api + common 两模块；Actuator + Micrometer 指标 |
 | AI 服务 | Python ≥3.10、FastAPI、Uvicorn、PyTorch 2.14（cu126/cpu 双 wheel） | Ultralytics YOLOv11、ONNX Runtime、torchvision |
 | 多模态/LLM | 阿里云百炼 qwen-vl-plus / qwen-plus（OpenAI 兼容协议） | DASHSCOPE Key 可选；未配置时相关功能降级，不影响主链路；Ollama 兜底 |
-| 存储/检索 | MySQL 8.0、Redis 7、MinIO（S3）、Milvus 2.4 standalone（etcd） | 向量：FLAT + COSINE，2048 维 |
+| 存储/检索 | MySQL 8.0、Redis 7、MinIO（S3）、Milvus 2.4 standalone（etcd） | Redis：JWT 登出黑名单（TTL=token 剩余有效期）+ 同用户连续 5 次密码错误锁定 15 分钟；向量：FLAT + COSINE，2048 维 |
 | 可观测 | Prometheus 2.54、Grafana 11.3、Micrometer、prometheus-fastapi-instrumentator | 5s 抓取，12 面板 provisioning |
 | 部署 | Docker Compose（gpu/cpu 互斥 profile）、Nginx 1.27 | GPU 镜像 4.53GB / CPU 镜像 1.05GB |
 
@@ -294,12 +296,18 @@ steelguard/
 ## 十一、测试
 
 ```bash
+# Java（36 个单元测试, Mockito mock 掉 MySQL/Redis/MinIO, 秒级跑完）
+cd steelguard-backend
+mvn test
+
 # Python（注意：直接用 venv 的 pytest，uv run 会触发 grpcio 源码编译）
 cd ai-service
 .\.venv\Scripts\python.exe -m pytest -q      # 121 passed
 ```
 
-覆盖：VOC 解析/重复框去重、增强碎片框回归、YOLO 导出分层防泄漏、推理契约（FakeTensor）、VLM JSON 打捞 5 例、报告 Schema 校验与防幻觉白名单、Embedding 裁剪/L2、Milvus pk 与类别表达式注入白名单等。
+- Java 覆盖：严重度规则各档边界、JWT 签发/篡改/过期/jti 唯一性、Redis 登出黑名单 TTL 与登录失败锁定计数、登录链路（锁定短路/错密计数/成功清零/兜底管理员）、批次抽样建批落库与分页参数收敛。
+- Python 覆盖：VOC 解析/重复框去重、增强碎片框回归、YOLO 导出分层防泄漏、推理契约（FakeTensor）、VLM JSON 打捞 5 例、报告 Schema 校验与防幻觉白名单、Embedding 裁剪/L2、Milvus pk 与类别表达式注入白名单等。
+- CI：`.github/workflows/ci.yml` 在 push/PR 时并行跑上述三端（Java 17、Python 3.11 CPU torch、Node 20 构建）。
 
 ## 十二、文档索引
 
@@ -312,6 +320,43 @@ cd ai-service
 | [docs/演示视频脚本.md](docs/演示视频脚本.md) | 求职演示分镜与解说词 |
 | `ai-service/reports/` | 压测报告、VLM 对决原始 JSON/CSV |
 | `docs/screenshots/` | 推理画框与双模型对决验收截图 |
+
+## 十三、面试自查（高频问题与代码证据）
+
+> 每个问题都能在本仓库指出具体代码位置，回答时按"结论 → 为什么 → 证据/数据 → 取舍"组织。
+
+**Q1：YOLO 推理为什么要加全局锁？吞吐瓶颈在哪？怎么扩？**
+单卡并发推理会抢占显存且 ultralytics 非线程安全，`YoloInferencer` 用双重检查锁单例 + 推理段串行锁保证正确（[yolo_infer.py](ai-service/app/inference/yolo_infer.py)）。压测显示纯推理 12–15ms 但 50 并发 P95 升到 1.1s——请求在排队等锁而非推理变慢（QPS 天花板 55–58，符合 Little's law）。扩容：请求 batch 合并 → 多 GPU 副本轮询 → ONNX/TensorRT。
+
+**Q2：Milvus 为什么用 FLAT + COSINE，不用 HNSW？**
+当前 4839 个 2048 维向量，FLAT 暴力检索毫秒级且召回 100%，省掉索引参数调优；规模上万后只改建索引参数即可平滑切 IVF_FLAT/HNSW，业务侧无感（[milvus_client.py](ai-service/app/trace/milvus_client.py)）。向量已 L2 归一化，COSINE 等价内积。
+
+**Q3：LLM 报告怎么防幻觉？**
+三重防线：①所有数字（缺陷数/占比/严重度/耗时）由 Java 从 MySQL 聚合后以 facts 注入 prompt，LLM 只写文字结论；②Python 侧 JSON Schema（Draft7）强校验；③失败带错修复重试 1 次，仍不合格直接报错不落库（[InspectionService.java](steelguard-backend/steelguard-admin-api/src/main/java/com/steelguard/admin/inspection/service/InspectionService.java) 的 `generateReport`、[app/report/](ai-service/app/report/)）。严重度最终以程序规则 `SeverityRules` 定级为准。
+
+**Q4：Qwen-VL 输出 JSON 断尾怎么解决？**
+实测长枚举输出会出现代码围栏、尾随逗号、完整对象后重复片段并半截断尾（finish_reason 仍报 stop）。对应三重处理：围栏/尾随垃圾用 `raw_decode` 宽松解析、尾随逗号正则修复、业务层括号深度扫描打捞有效检测项，批处理失败率 23%→0（[jsonio.py](ai-service/app/common/jsonio.py)、[test_vl_infer.py](ai-service/tests/test_vl_infer.py)）。
+
+**Q5：JWT 无状态，登出怎么做？为什么黑名单 TTL 这样设？**
+签发时每个 token 带唯一 jti；登出把 jti 写入 Redis（`TokenBlacklistService`），过滤器每请求校验。TTL 取 token 剩余有效期——token 自然过期后黑名单条目自动消失，不产生长期垃圾。配套登录防爆破：同用户名连续错 5 次锁 15 分钟（首次计数写 expire，无需定时任务），登录成功立即清零（`LoginAttemptService` / `UserService`）。
+
+**Q6：MinIO 为什么要内外两个端点？报告里的预签名图片过期了怎么办？**
+容器内 I/O 走 `minio:9000`，浏览器必须走宿主可达地址，所以拆成内部 endpoint 与 public-endpoint 两套 MinioClient。预签名 1h 过期：报告 JSON 库里原样保存，查询详情时按 `similar_cases[].milvus_pk` 回查 defect_case/inspect_record 重新签名，只改接口返回值不回写库（`refreshReportUrls`）。
+
+**Q7：@Async 有什么坑？**
+`@Async` 方法必须由其他 Bean 调用才生效，类内自调用走的是原始对象不经过代理（`InspectionService.runBatch` 注释中明确标注）；线程池在 `AsyncConfig` 单独声明 `batchExecutor`，与默认池隔离。
+
+**Q8：批次中某张图失败怎么办？**
+单张 try/catch 隔离，失败计数 + 错误汇总进批次 `error_msg`，全部失败才置 failed，部分失败仍 done；每处理完一张就更新进度（上限 50 张，写压力可忽略），前端轮询可见实时进度。向量入库失败只告警不判整图失败——检测结果已成功，溯源是增值链路。
+
+**Q9：模型选型凭什么选 YOLO 而不是多模态大模型？**
+同一张 100 图验证集（seed42 分层抽样、IoU 0.5）实测：YOLO F1=0.677 / 11.9ms / 零现金成本；Qwen-VL-plus 零样本 F1=0.034 / 均 8.5s / ¥0.167。工业产线要的是确定性、低延迟、可控成本，数据见 [QwenVL零样本对决报告.md](docs/QwenVL零样本对决报告.md)。这是工程选型不是追新。
+
+**Q10：模型效果短板是什么？怎么改进？**
+crazing（裂纹细长、低对比）mAP50 仅 0.365，拖低整体。改进方向：yolo11m 提容量、裂纹类过采样、去掉黑边 rotate 增强（黑边与裂纹形态混淆）；同时 patches 已达 0.959 说明数据本身不是无解。这是已知问题不是隐藏问题。
+
+**Q11：压测 P95 是怎么测出来的？**
+全链路（客户端→Nginx→Java/JWT→Python YOLO）multipart 上传，200 张图内存池轮换，4 并发 30 请求预热后跑 10/20/50 三档各 500 请求，脚本与原始 JSON/CSV 在 [load_test_detect.py](ai-service/scripts/load_test_detect.py) 与 `ai-service/reports/`，可复现。
 
 ---
 
