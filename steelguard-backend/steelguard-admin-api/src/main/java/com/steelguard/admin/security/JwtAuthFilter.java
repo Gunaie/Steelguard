@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +28,8 @@ import java.util.List;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
+    private final TokenBlacklistService tokenBlacklistService;
+    private final JwtAuthEntryPoint jwtAuthEntryPoint;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -40,6 +43,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (StringUtils.hasText(token) && jwtUtils.isValid(token)) {
             Claims claims = jwtUtils.parse(token);
+            // 登出黑名单: jti 已被撤销则拒绝, 走统一 401 入口
+            if (tokenBlacklistService.isBlacklisted(claims.getId())) {
+                SecurityContextHolder.clearContext();
+                jwtAuthEntryPoint.commence(request, response,
+                        new BadCredentialsException("token 已注销"));
+                return;
+            }
             String userId = claims.getSubject();
             String username = String.valueOf(claims.get(SecurityConstant.USERNAME_KEY));
 

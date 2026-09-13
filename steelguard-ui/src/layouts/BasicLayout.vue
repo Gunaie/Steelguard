@@ -56,6 +56,7 @@ import {
   ScanOutlined,
 } from '@ant-design/icons-vue'
 import { useUserStore } from '@/stores/user'
+import { logout as logoutApi } from '@/api/auth'
 
 const route = useRoute()
 const router = useRouter()
@@ -80,7 +81,13 @@ function onMenuClick({ key }: { key: string }) {
   }
 }
 
-function handleLogout() {
+async function handleLogout() {
+  // 服务端撤销 token(Redis 黑名单); 网络失败不阻塞本地清理
+  try {
+    await logoutApi()
+  } catch {
+    // ignore: 本地仍需退出登录态
+  }
   userStore.logout()
   router.push('/login')
 }

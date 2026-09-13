@@ -28,6 +28,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+    private final LoginAttemptService loginAttemptService;
 
     // 兜底账号(库为空时使用)
     private static final String FALLBACK_USERNAME = "admin";
@@ -36,6 +37,9 @@ public class UserService {
     public LoginResponse login(LoginRequest req) {
         String username = req.getUsername();
         String password = req.getPassword();
+
+        // 0. Redis 失败计数: 锁定期间直接拒绝(防爆破)
+        loginAttemptService.assertNotLocked(username);
 
         // 1. 查库
         User user = userMapper.selectOne(
@@ -48,17 +52,21 @@ public class UserService {
                 // 自动注册 admin 到库
                 user = initFallbackUser();
             } else {
+                loginAttemptService.recordFailure(username);
                 throw new BusinessException(400, "用户名或密码错误");
             }
         } else {
             // 校验密码
             if (!passwordEncoder.matches(password, user.getPassword())) {
+                loginAttemptService.recordFailure(username);
                 throw new BusinessException(400, "用户名或密码错误");
             }
             if (user.getStatus() != null && user.getStatus() == 0) {
                 throw new BusinessException(403, "账号已被禁用");
             }
         }
+        // 3. 认证通过, 清除失败计数
+        loginAttemptService.reset(username);
 
         // 生成 token
         Map<String, Object> claims = new HashMap<>();

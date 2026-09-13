@@ -24,6 +24,11 @@ export function register(data: { username: string; password: string; nickname?: 
   return request.post<any, number>('/auth/register', data)
 }
 
+// 登出(服务端将 token 加入 Redis 黑名单)
+export function logout() {
+  return request.post<any, void>('/auth/logout')
+}
+
 // 健康检查
 export function healthCheck() {
   return request.get<any, any>('/health')
