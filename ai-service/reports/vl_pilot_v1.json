@@ -1,0 +1,840 @@
+{
+  "qwen-vl-plus": {
+    "tp": 3,
+    "fp": 8,
+    "fn": 20,
+    "tp_lo": 3,
+    "fp_lo": 8,
+    "fn_lo": 20,
+    "per_class": {
+      "crazing": {
+        "tp": 0,
+        "fp": 1,
+        "fn": 5,
+        "gt": 5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "pitted_surface": {
+        "tp": 2,
+        "fp": 1,
+        "fn": 1,
+        "gt": 3,
+        "precision": 0.6667,
+        "recall": 0.6667,
+        "f1": 0.6667
+      },
+      "inclusion": {
+        "tp": 0,
+        "fp": 2,
+        "fn": 5,
+        "gt": 5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "scratches": {
+        "tp": 1,
+        "fp": 3,
+        "fn": 2,
+        "gt": 3,
+        "precision": 0.25,
+        "recall": 0.3333,
+        "f1": 0.2857
+      },
+      "patches": {
+        "tp": 0,
+        "fp": 1,
+        "fn": 5,
+        "gt": 5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "rolled-in_scale": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 2,
+        "gt": 2,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "latency_ms": [
+      1080.12,
+      953.45,
+      907.08,
+      14683.28,
+      1197.58,
+      1098.59,
+      1550.77,
+      2482.97,
+      5882.62,
+      809.14,
+      897.91
+    ],
+    "prompt_tokens": 4840,
+    "completion_tokens": 953,
+    "total_tokens": 5793,
+    "json_ok": 11,
+    "errors": [
+      {
+        "image": "patches_95.jpg",
+        "kind": "timeout",
+        "message": "视觉模型请求超时(60.0s)"
+      }
+    ],
+    "images": [
+      {
+        "image": "crazing_298.jpg",
+        "gt_count": 2,
+        "pred_count": 1,
+        "tp": 0,
+        "fp": 1,
+        "fn": 2,
+        "latency_ms": 1080.12,
+        "wall_ms": 1097.51,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 59,
+          "total_tokens": 499
+        },
+        "detections": [
+          {
+            "class_id": 3,
+            "class_name": "pitted_surface",
+            "class_name_cn": "麻点",
+            "confidence": 0.9,
+            "bbox": {
+              "x1": 10.0,
+              "y1": 10.0,
+              "x2": 190.0,
+              "y2": 190.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "crazing_21.jpg",
+        "gt_count": 3,
+        "pred_count": 1,
+        "tp": 0,
+        "fp": 1,
+        "fn": 3,
+        "latency_ms": 953.45,
+        "wall_ms": 964.53,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 52,
+          "total_tokens": 492
+        },
+        "detections": [
+          {
+            "class_id": 0,
+            "class_name": "crazing",
+            "class_name_cn": "裂纹",
+            "confidence": 0.9,
+            "bbox": {
+              "x1": 10.0,
+              "y1": 10.0,
+              "x2": 190.0,
+              "y2": 190.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "inclusion_242.jpg",
+        "gt_count": 2,
+        "pred_count": 1,
+        "tp": 0,
+        "fp": 1,
+        "fn": 2,
+        "latency_ms": 907.08,
+        "wall_ms": 916.49,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 48,
+          "total_tokens": 488
+        },
+        "detections": [
+          {
+            "class_id": 5,
+            "class_name": "scratches",
+            "class_name_cn": "划痕",
+            "confidence": 0.8,
+            "bbox": {
+              "x1": 20.0,
+              "y1": 10.0,
+              "x2": 40.0,
+              "y2": 180.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "inclusion_231.jpg",
+        "gt_count": 3,
+        "pred_count": 1,
+        "tp": 0,
+        "fp": 1,
+        "fn": 3,
+        "latency_ms": 14683.28,
+        "wall_ms": 14697.27,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 70,
+          "total_tokens": 510
+        },
+        "detections": [
+          {
+            "class_id": 5,
+            "class_name": "scratches",
+            "class_name_cn": "划痕",
+            "confidence": 0.85,
+            "bbox": {
+              "x1": 24.0,
+              "y1": 12.0,
+              "x2": 56.0,
+              "y2": 188.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "patches_292.jpg",
+        "gt_count": 5,
+        "pred_count": 1,
+        "tp": 0,
+        "fp": 1,
+        "fn": 5,
+        "latency_ms": 1197.58,
+        "wall_ms": 1206.06,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 99,
+          "total_tokens": 539
+        },
+        "detections": [
+          {
+            "class_id": 1,
+            "class_name": "inclusion",
+            "class_name_cn": "夹杂",
+            "confidence": 0.9,
+            "bbox": {
+              "x1": 50.0,
+              "y1": 60.0,
+              "x2": 70.0,
+              "y2": 80.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "pitted_surface_286.jpg",
+        "gt_count": 1,
+        "pred_count": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "latency_ms": 1098.59,
+        "wall_ms": 1115.29,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 62,
+          "total_tokens": 502
+        },
+        "detections": [
+          {
+            "class_id": 3,
+            "class_name": "pitted_surface",
+            "class_name_cn": "麻点",
+            "confidence": 0.9,
+            "bbox": {
+              "x1": 0.0,
+              "y1": 0.0,
+              "x2": 200.0,
+              "y2": 200.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "pitted_surface_300.jpg",
+        "gt_count": 2,
+        "pred_count": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 1,
+        "latency_ms": 1550.77,
+        "wall_ms": 1561.0,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 49,
+          "total_tokens": 489
+        },
+        "detections": [
+          {
+            "class_id": 3,
+            "class_name": "pitted_surface",
+            "class_name_cn": "麻点",
+            "confidence": 0.9,
+            "bbox": {
+              "x1": 0.0,
+              "y1": 0.0,
+              "x2": 200.0,
+              "y2": 200.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "rolled-in_scale_155.jpg",
+        "gt_count": 1,
+        "pred_count": 1,
+        "tp": 0,
+        "fp": 1,
+        "fn": 1,
+        "latency_ms": 2482.97,
+        "wall_ms": 2498.56,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 134,
+          "total_tokens": 574
+        },
+        "detections": [
+          {
+            "class_id": 1,
+            "class_name": "inclusion",
+            "class_name_cn": "夹杂",
+            "confidence": 0.75,
+            "bbox": {
+              "x1": 70.0,
+              "y1": 50.0,
+              "x2": 80.0,
+              "y2": 60.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "rolled-in_scale_22.jpg",
+        "gt_count": 1,
+        "pred_count": 1,
+        "tp": 0,
+        "fp": 1,
+        "fn": 1,
+        "latency_ms": 5882.62,
+        "wall_ms": 5896.76,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 282,
+          "total_tokens": 722
+        },
+        "detections": [
+          {
+            "class_id": 2,
+            "class_name": "patches",
+            "class_name_cn": "斑块",
+            "confidence": 0.65,
+            "bbox": {
+              "x1": 140.0,
+              "y1": 140.0,
+              "x2": 180.0,
+              "y2": 180.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "scratches_1.jpg",
+        "gt_count": 2,
+        "pred_count": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 1,
+        "latency_ms": 809.14,
+        "wall_ms": 810.06,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 49,
+          "total_tokens": 489
+        },
+        "detections": [
+          {
+            "class_id": 5,
+            "class_name": "scratches",
+            "class_name_cn": "划痕",
+            "confidence": 0.8,
+            "bbox": {
+              "x1": 20.0,
+              "y1": 10.0,
+              "x2": 40.0,
+              "y2": 180.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "scratches_61.jpg",
+        "gt_count": 1,
+        "pred_count": 1,
+        "tp": 0,
+        "fp": 1,
+        "fn": 1,
+        "latency_ms": 897.91,
+        "wall_ms": 918.63,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 49,
+          "total_tokens": 489
+        },
+        "detections": [
+          {
+            "class_id": 5,
+            "class_name": "scratches",
+            "class_name_cn": "划痕",
+            "confidence": 0.8,
+            "bbox": {
+              "x1": 20.0,
+              "y1": 10.0,
+              "x2": 40.0,
+              "y2": 180.0
+            }
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "images_ok": 11,
+      "images_error": 1,
+      "precision": 0.2727,
+      "recall": 0.1304,
+      "f1": 0.1765,
+      "localization_only": {
+        "precision": 0.2727,
+        "recall": 0.1304,
+        "f1": 0.1765
+      },
+      "latency_avg_ms": 2867.6,
+      "latency_max_ms": 14683.3,
+      "tokens_per_image": 526.6,
+      "prompt_tokens": 4840,
+      "completion_tokens": 953,
+      "total_tokens": 5793
+    }
+  },
+  "qwen-vl-max": {
+    "tp": 1,
+    "fp": 8,
+    "fn": 25,
+    "tp_lo": 1,
+    "fp_lo": 8,
+    "fn_lo": 25,
+    "per_class": {
+      "crazing": {
+        "tp": 0,
+        "fp": 1,
+        "fn": 5,
+        "gt": 5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "inclusion": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 5,
+        "gt": 5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "scratches": {
+        "tp": 0,
+        "fp": 3,
+        "fn": 3,
+        "gt": 3,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "patches": {
+        "tp": 0,
+        "fp": 4,
+        "fn": 8,
+        "gt": 8,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "pitted_surface": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 2,
+        "gt": 3,
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5
+      },
+      "rolled-in_scale": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 2,
+        "gt": 2,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "latency_ms": [
+      4677.89,
+      1557.28,
+      1743.27,
+      1712.91,
+      2603.25,
+      1747.22,
+      902.79,
+      1581.22,
+      4605.63,
+      1312.01,
+      1658.5,
+      1072.58
+    ],
+    "prompt_tokens": 5280,
+    "completion_tokens": 605,
+    "total_tokens": 5885,
+    "json_ok": 12,
+    "errors": [],
+    "images": [
+      {
+        "image": "crazing_298.jpg",
+        "gt_count": 2,
+        "pred_count": 0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 2,
+        "latency_ms": 4677.89,
+        "wall_ms": 4679.12,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 8,
+          "total_tokens": 448
+        },
+        "detections": []
+      },
+      {
+        "image": "crazing_21.jpg",
+        "gt_count": 3,
+        "pred_count": 1,
+        "tp": 0,
+        "fp": 1,
+        "fn": 3,
+        "latency_ms": 1557.28,
+        "wall_ms": 1558.26,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 48,
+          "total_tokens": 488
+        },
+        "detections": [
+          {
+            "class_id": 0,
+            "class_name": "crazing",
+            "class_name_cn": "裂纹",
+            "confidence": 0.9,
+            "bbox": {
+              "x1": 0.0,
+              "y1": 0.0,
+              "x2": 200.0,
+              "y2": 200.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "inclusion_242.jpg",
+        "gt_count": 2,
+        "pred_count": 1,
+        "tp": 0,
+        "fp": 1,
+        "fn": 2,
+        "latency_ms": 1743.27,
+        "wall_ms": 1744.07,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 49,
+          "total_tokens": 489
+        },
+        "detections": [
+          {
+            "class_id": 5,
+            "class_name": "scratches",
+            "class_name_cn": "划痕",
+            "confidence": 0.9,
+            "bbox": {
+              "x1": 70.0,
+              "y1": 40.0,
+              "x2": 90.0,
+              "y2": 160.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "inclusion_231.jpg",
+        "gt_count": 3,
+        "pred_count": 1,
+        "tp": 0,
+        "fp": 1,
+        "fn": 3,
+        "latency_ms": 1712.91,
+        "wall_ms": 1713.82,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 51,
+          "total_tokens": 491
+        },
+        "detections": [
+          {
+            "class_id": 5,
+            "class_name": "scratches",
+            "class_name_cn": "划痕",
+            "confidence": 0.9,
+            "bbox": {
+              "x1": 70.0,
+              "y1": 50.0,
+              "x2": 90.0,
+              "y2": 150.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "patches_292.jpg",
+        "gt_count": 5,
+        "pred_count": 2,
+        "tp": 0,
+        "fp": 2,
+        "fn": 5,
+        "latency_ms": 2603.25,
+        "wall_ms": 2604.24,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 95,
+          "total_tokens": 535
+        },
+        "detections": [
+          {
+            "class_id": 2,
+            "class_name": "patches",
+            "class_name_cn": "斑块",
+            "confidence": 0.9,
+            "bbox": {
+              "x1": 10.0,
+              "y1": 10.0,
+              "x2": 70.0,
+              "y2": 90.0
+            }
+          },
+          {
+            "class_id": 2,
+            "class_name": "patches",
+            "class_name_cn": "斑块",
+            "confidence": 0.85,
+            "bbox": {
+              "x1": 110.0,
+              "y1": 30.0,
+              "x2": 170.0,
+              "y2": 100.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "patches_95.jpg",
+        "gt_count": 3,
+        "pred_count": 1,
+        "tp": 0,
+        "fp": 1,
+        "fn": 3,
+        "latency_ms": 1747.22,
+        "wall_ms": 1748.16,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 47,
+          "total_tokens": 487
+        },
+        "detections": [
+          {
+            "class_id": 2,
+            "class_name": "patches",
+            "class_name_cn": "斑块",
+            "confidence": 0.9,
+            "bbox": {
+              "x1": 50.0,
+              "y1": 60.0,
+              "x2": 140.0,
+              "y2": 140.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "pitted_surface_286.jpg",
+        "gt_count": 1,
+        "pred_count": 0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 1,
+        "latency_ms": 902.79,
+        "wall_ms": 903.67,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 8,
+          "total_tokens": 448
+        },
+        "detections": []
+      },
+      {
+        "image": "pitted_surface_300.jpg",
+        "gt_count": 2,
+        "pred_count": 1,
+        "tp": 1,
+        "fp": 0,
+        "fn": 1,
+        "latency_ms": 1581.22,
+        "wall_ms": 1582.22,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 49,
+          "total_tokens": 489
+        },
+        "detections": [
+          {
+            "class_id": 3,
+            "class_name": "pitted_surface",
+            "class_name_cn": "麻点",
+            "confidence": 0.95,
+            "bbox": {
+              "x1": 0.0,
+              "y1": 0.0,
+              "x2": 200.0,
+              "y2": 200.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "rolled-in_scale_155.jpg",
+        "gt_count": 1,
+        "pred_count": 1,
+        "tp": 0,
+        "fp": 1,
+        "fn": 1,
+        "latency_ms": 4605.63,
+        "wall_ms": 4606.6,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 184,
+          "total_tokens": 624
+        },
+        "detections": [
+          {
+            "class_id": 2,
+            "class_name": "patches",
+            "class_name_cn": "斑块",
+            "confidence": 0.75,
+            "bbox": {
+              "x1": 20.0,
+              "y1": 20.0,
+              "x2": 180.0,
+              "y2": 180.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "rolled-in_scale_22.jpg",
+        "gt_count": 1,
+        "pred_count": 0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 1,
+        "latency_ms": 1312.01,
+        "wall_ms": 1312.92,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 8,
+          "total_tokens": 448
+        },
+        "detections": []
+      },
+      {
+        "image": "scratches_1.jpg",
+        "gt_count": 2,
+        "pred_count": 1,
+        "tp": 0,
+        "fp": 1,
+        "fn": 2,
+        "latency_ms": 1658.5,
+        "wall_ms": 1659.25,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 50,
+          "total_tokens": 490
+        },
+        "detections": [
+          {
+            "class_id": 5,
+            "class_name": "scratches",
+            "class_name_cn": "划痕",
+            "confidence": 0.9,
+            "bbox": {
+              "x1": 46.0,
+              "y1": 0.0,
+              "x2": 50.0,
+              "y2": 196.0
+            }
+          }
+        ]
+      },
+      {
+        "image": "scratches_61.jpg",
+        "gt_count": 1,
+        "pred_count": 0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 1,
+        "latency_ms": 1072.58,
+        "wall_ms": 1073.59,
+        "tokens": {
+          "prompt_tokens": 440,
+          "completion_tokens": 8,
+          "total_tokens": 448
+        },
+        "detections": []
+      }
+    ],
+    "summary": {
+      "images_ok": 12,
+      "images_error": 0,
+      "precision": 0.1111,
+      "recall": 0.0385,
+      "f1": 0.0571,
+      "localization_only": {
+        "precision": 0.1111,
+        "recall": 0.0385,
+        "f1": 0.0571
+      },
+      "latency_avg_ms": 2097.9,
+      "latency_max_ms": 4677.9,
+      "tokens_per_image": 490.4,
+      "prompt_tokens": 5280,
+      "completion_tokens": 605,
+      "total_tokens": 5885
+    }
+  }
+}
